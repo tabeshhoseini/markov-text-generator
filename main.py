@@ -1,4 +1,5 @@
 import unicodedata
+import random
 
 words = {}
 
@@ -20,7 +21,12 @@ for line in open("sample.txt", "r"):
     seq = line.replace("—", " ").split()
     for word in seq:
         clean_word(word)
-        words[word] = 1
+        if word not in words:
+            words[word] = 1
+        else:
+            words[word] += 1
 
+word_list = list(words)
+weights = words.values()
 
-print(words)
+print(random.choices(word_list, weights=weights, k=5))
