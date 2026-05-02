@@ -5,6 +5,7 @@ successors = {}
 window = []
 
 
+# cleaning text from extra puncuations
 def load_puncuations():
     puncs = {}
     try:
@@ -45,6 +46,7 @@ def create_triagram(word):
         window.pop(0)
 
 
+# iterate over words and adding them to the triagrams
 def process_words():
     try:
         for line in open("sample.txt", "r"):
@@ -58,6 +60,7 @@ def process_words():
     return True
 
 
+# the main structure
 def generate_words(number):
     if not process_words():
         return
