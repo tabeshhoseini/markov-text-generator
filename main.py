@@ -29,8 +29,8 @@ def clean_word(word):
     return word.strip(punctuation).lower()
 
 
-def add_to_successors(triagram):
-    first, second, third = triagram
+def add_to_successors(trigram):
+    first, second, third = trigram
 
     if (first, second) not in successors:
         successors[(first, second)] = [third]
@@ -38,7 +38,7 @@ def add_to_successors(triagram):
         successors[(first, second)].append(third)
 
 
-def create_triagram(word):
+def create_trigram(word):
     window.append(word)
 
     if len(window) == 3:
@@ -46,14 +46,14 @@ def create_triagram(word):
         window.pop(0)
 
 
-# iterate over words and adding them to the triagrams
+# iterate over words and adding them to the trigrams
 def process_words():
     try:
         for line in open("sample.txt", "r"):
             seq = line.replace("—", " ").split()
             for word in seq:
                 cleaned = clean_word(word)
-                create_triagram(cleaned)
+                create_trigram(cleaned)
     except FileNotFoundError:
         print("Error: 'sample.txt' not found. Cannot process words.")
         return False
@@ -66,7 +66,7 @@ def generate_words(number):
         return
 
     if not successors:
-        print("Error: No triagrams generated")
+        print("Error: No trigrams generated")
         return
 
     bigram = random.choice(list(successors))
