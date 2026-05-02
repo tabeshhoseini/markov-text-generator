@@ -7,15 +7,18 @@ window = []
 
 def load_puncuations():
     puncs = {}
-    with open("sample.txt", "r") as file:
-        for line in file:
-            for char in line:
-                category = unicodedata.category(char)
-                if category.startswith("P"):
-                    puncs[char] = 1
+    try:
+        with open("sample.txt", "r") as file:
+            for line in file:
+                for char in line:
+                    category = unicodedata.category(char)
+                    if category.startswith("P"):
+                        puncs[char] = 1
 
-        punctuation = "".join(puncs)
-        return punctuation
+            punctuation = "".join(puncs)
+            return punctuation
+    except FileNotFoundError:
+        return ""
 
 
 punctuation = load_puncuations()
@@ -43,16 +46,22 @@ def create_triagram(word):
 
 
 def process_words():
-    for line in open("sample.txt", "r"):
-        seq = line.replace("—", " ").split()
-        for word in seq:
-            cleaned = clean_word(word)
-            create_triagram(cleaned)
+    try:
+        for line in open("sample.txt", "r"):
+            seq = line.replace("—", " ").split()
+            for word in seq:
+                cleaned = clean_word(word)
+                create_triagram(cleaned)
+    except FileNotFoundError:
+        print("Error: 'sample.txt' not found. Cannot process words.")
+        return False
+    return True
 
 
 def main():
 
-    process_words()
+    if not process_words():
+        return
 
     if not successors:
         print("Error: No triagrams generated")
