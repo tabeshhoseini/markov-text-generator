@@ -1,9 +1,8 @@
 import unicodedata
 import random
 
-words = {}
+successors = {}
 window = []
-bigrams = {}
 
 
 def clean_word(word):
@@ -19,6 +18,23 @@ def clean_word(word):
     return word.strip(punctuation).lower()
 
 
+def add_to_successors(bigram):
+    first, second = bigram
+
+    if first not in successors:
+        successors[first] = [second]
+    else:
+        successors[first].append(second)
+
+
+def create_bigram(word):
+    window.append(word)
+
+    if len(window) == 2:
+        add_to_successors(window)
+        window.pop(0)
+
+
 def proccess_words():
     for line in open("sample.txt", "r"):
         seq = line.replace("—", " ").split()
@@ -27,23 +43,5 @@ def proccess_words():
             create_bigram(word)
 
 
-def create_bigram(word):
-    window.append(word)
-
-    if len(window) == 2:
-        bigram = tuple(window)
-        if bigram not in bigrams:
-            bigrams[bigram] = 1
-        else:
-            bigrams[bigram] += 1
-
-        window.pop(0)
-
-
-# word_list = list(words)
-# weights = words.values()
-
-# print(random.choices(word_list, weights=weights, k=5))
-
 proccess_words()
-print(bigrams)
+print(successors)
