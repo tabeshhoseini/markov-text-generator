@@ -3,7 +3,7 @@ import random
 
 successors = {}
 window = []
-word = "hear"
+word = ""
 
 
 def clean_word(word):
@@ -19,19 +19,19 @@ def clean_word(word):
     return word.strip(punctuation).lower()
 
 
-def add_to_successors(bigram):
-    first, second = bigram
+def add_to_successors(triagram):
+    first, second, third = triagram
 
-    if first not in successors:
-        successors[first] = [second]
+    if (first, second) not in successors:
+        successors[(first, second)] = [third]
     else:
-        successors[first].append(second)
+        successors[(first, second)].append(third)
 
 
-def create_bigram(word):
+def create_triagram(word):
     window.append(word)
 
-    if len(window) == 2:
+    if len(window) == 3:
         add_to_successors(window)
         window.pop(0)
 
@@ -41,12 +41,17 @@ def proccess_words():
         seq = line.replace("—", " ").split()
         for word in seq:
             clean_word(word)
-            create_bigram(word)
+            create_triagram(word)
 
 
 proccess_words()
 
-for i in range(10):
-    possible_words = successors[word]
+bigram = random.choice(list(successors))
+
+for i in range(20):
+    last_word = bigram[1]
+    possible_words = successors[bigram]
     word = random.choice(possible_words)
     print(word, end=" ")
+
+    bigram = (last_word, word)
