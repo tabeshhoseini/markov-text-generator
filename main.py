@@ -3,19 +3,25 @@ import random
 
 successors = {}
 window = []
-word = ""
+
+
+def load_puncuations():
+    puncs = {}
+    with open("sample.txt", "r") as file:
+        for line in file:
+            for char in line:
+                category = unicodedata.category(char)
+                if category.startswith("P"):
+                    puncs[char] = 1
+
+        punctuation = "".join(puncs)
+        return punctuation
+
+
+punctuation = load_puncuations()
 
 
 def clean_word(word):
-    puncs = {}
-    for line in open("sample.txt", "r"):
-        for char in line:
-            category = unicodedata.category(char)
-            if category.startswith("P"):
-                puncs[char] = 1
-
-    punctuation = "".join(puncs)
-
     return word.strip(punctuation).lower()
 
 
@@ -36,22 +42,37 @@ def create_triagram(word):
         window.pop(0)
 
 
-def proccess_words():
+def process_words():
     for line in open("sample.txt", "r"):
         seq = line.replace("—", " ").split()
         for word in seq:
-            clean_word(word)
-            create_triagram(word)
+            cleaned = clean_word(word)
+            create_triagram(cleaned)
 
 
-proccess_words()
+def main():
 
-bigram = random.choice(list(successors))
+    process_words()
 
-for i in range(20):
-    last_word = bigram[1]
-    possible_words = successors[bigram]
-    word = random.choice(possible_words)
-    print(word, end=" ")
+    if not successors:
+        print("Error: No triagrams generated")
+        return
 
-    bigram = (last_word, word)
+    bigram = random.choice(list(successors))
+
+    for i in range(20):
+        last_word = bigram[1]
+        possible_words = successors.get(bigram, [])
+
+        if not possible_words:
+            bigram = random.choice(list(successors))
+            continue
+
+        word = random.choice(possible_words)
+        print(word, end=" ")
+
+        bigram = (last_word, word)
+
+
+if __name__ == "__main__":
+    main()
