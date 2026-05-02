@@ -58,8 +58,7 @@ def process_words():
     return True
 
 
-def main():
-
+def generate_words(number):
     if not process_words():
         return
 
@@ -69,7 +68,7 @@ def main():
 
     bigram = random.choice(list(successors))
 
-    for i in range(20):
+    for i in range(number):
         last_word = bigram[1]
         possible_words = successors.get(bigram, [])
 
@@ -81,6 +80,13 @@ def main():
         print(word, end=" ")
 
         bigram = (last_word, word)
+
+
+def main():
+    number = int(input("how many words do you want to generate?(10 is recommanded):  "))
+    print("__________________________")
+    print("the generated text: ")
+    generate_words(number)
 
 
 if __name__ == "__main__":
