@@ -3,6 +3,7 @@ import random
 
 successors = {}
 window = []
+word = "hear"
 
 
 def clean_word(word):
@@ -44,4 +45,8 @@ def proccess_words():
 
 
 proccess_words()
-print(successors)
+
+for i in range(10):
+    possible_words = successors[word]
+    word = random.choice(possible_words)
+    print(word, end=" ")
